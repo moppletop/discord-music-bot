@@ -1,0 +1,6 @@
+.idea
+*.jar
+*.bat
+*.sh
+*.json
+target/
