@@ -19,7 +19,7 @@ public class TrackLibrary {
            log.info("Loaded {} tracks...", tracks.length);
        } catch (Exception ex) {
            tracks = new Track[0];
-           log.info("Failed to load track library");
+           log.error("Failed to load track library");
        }
     }
 }

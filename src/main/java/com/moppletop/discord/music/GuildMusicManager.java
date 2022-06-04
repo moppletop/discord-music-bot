@@ -24,6 +24,8 @@ public class GuildMusicManager extends AudioEventAdapter {
     }
 
     public void play(AudioTrack track) {
+        queue.clear();
+
         player.playTrack(track);
     }
 
@@ -66,7 +68,7 @@ public class GuildMusicManager extends AudioEventAdapter {
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason == AudioTrackEndReason.FINISHED && !queue.isEmpty()) {
             AudioTrack nextTrack = queue.poll();
-            play(nextTrack);
+            player.playTrack(nextTrack);
         }
     }
 }
