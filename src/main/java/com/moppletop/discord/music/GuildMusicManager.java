@@ -34,7 +34,7 @@ public class GuildMusicManager extends AudioEventAdapter {
 
         if (!tracks.isEmpty()) {
             queue.addAll(tracks);
-            play(queue.poll());
+            player.playTrack(queue.poll());
         }
     }
 
