@@ -3,6 +3,7 @@ package com.moppletop.discord.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -24,6 +25,7 @@ public class MusicManager {
     public MusicManager() {
         this.playerManager = new DefaultAudioPlayerManager();
         playerManager.registerSourceManager(new YoutubeAudioSourceManager(false));
+        AudioSourceManagers.registerLocalSource(playerManager);
 
         this.musicManagers = Collections.synchronizedMap(new HashMap<>());
     }
@@ -63,6 +65,30 @@ public class MusicManager {
         });
     }
 
+    public void record(Guild guild) {
+        if (!guild.getAudioManager().isConnected()) {
+            log.info("We're not connected to a voice channel in {}", guild.getName());
+            return;
+        }
+
+        GuildMusicManager musicManager = getGuildAudioPlayer(guild);
+
+        log.info("Starting recording...");
+        musicManager.record();
+    }
+
+    public void saveRecording(Guild guild, String name) {
+        if (!guild.getAudioManager().isConnected()) {
+            log.info("We're not connected to a voice channel in {}", guild.getName());
+            return;
+        }
+
+        GuildMusicManager musicManager = getGuildAudioPlayer(guild);
+
+        log.info("Saving recording to {}...", name);
+        musicManager.saveRecording(name);
+    }
+
     public GuildMusicManager getGuildAudioPlayer(Guild guild) {
         long guildId = guild.getIdLong();
         GuildMusicManager musicManager = musicManagers.get(guildId);
@@ -73,6 +99,7 @@ public class MusicManager {
         }
 
         guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
+        guild.getAudioManager().setReceivingHandler(musicManager.getReceiveHandler());
 
         return musicManager;
     }
