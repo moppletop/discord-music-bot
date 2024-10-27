@@ -13,9 +13,7 @@ public class TrackLibrary {
 
     private Track[] tracks;
 
-    public TrackLibrary() {
-        ObjectMapper objectMapper = new ObjectMapper();
-
+    public TrackLibrary(ObjectMapper objectMapper) {
        try {
            tracks = objectMapper.readValue(new File("preloaded.json"), Track[].class);
        } catch (Exception ex) {

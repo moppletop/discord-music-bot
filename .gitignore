@@ -4,3 +4,4 @@
 *.sh
 *.json
 target/
+dependency-reduced-pom.xml

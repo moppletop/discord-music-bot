@@ -1,5 +1,6 @@
 package com.moppletop.discord.music;
 
+import com.moppletop.discord.DiscordBot;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -17,13 +18,19 @@ import java.util.Map;
 @Slf4j
 public class MusicManager {
 
+    private static YoutubeAudioSourceManager loadYoutubeSource(String refreshToken) {
+        YoutubeAudioSourceManager manager = new YoutubeAudioSourceManager();
+        manager.useOauth2(refreshToken, false);
+        return manager;
+    }
+
     private final AudioPlayerManager playerManager;
 
     private final Map<Long, GuildMusicManager> musicManagers;
 
-    public MusicManager() {
+    public MusicManager(DiscordBot discordBot) {
         this.playerManager = new DefaultAudioPlayerManager();
-        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
+        playerManager.registerSourceManager(loadYoutubeSource(discordBot.getConfig().getProperties().getYoutubeToken()));
 
         this.musicManagers = Collections.synchronizedMap(new HashMap<>());
     }
